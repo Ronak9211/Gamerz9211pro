@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamerz9211 — Gaming × Tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14;
+    --bg-alt:#10141D;
+    --cyan:#00F0FF;
+    --magenta:#FF3D81;
+    --text:#E8ECF1;
+    --muted:#5A6478;
+    --line:#1D2330;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* scanline overlay */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.015) 0px,
+      rgba(255,255,255,0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events:none;
+    z-index:999;
+  }
+  h1,h2,h3,.display{
+    font-family:'Rajdhani',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 6vw;
+    background:rgba(11,14,20,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:1.3rem;
+    letter-spacing:0.03em;
+  }
+  .logo span{color:var(--cyan);}
+  .nav-left{display:flex; align-items:center; gap:14px;}
+  .pro-badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.62rem;
+    font-weight:500;
+    letter-spacing:0.05em;
+    color:var(--cyan);
+    border:1px solid var(--cyan);
+    border-radius:20px;
+    padding:3px 9px;
+    vertical-align:middle;
+    text-transform:uppercase;
+    box-shadow:0 0 8px rgba(0,240,255,0.25);
+  }
+  .nav-links{display:flex;gap:32px;font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+  .nav-links a:hover{color:var(--cyan);}
+  .nav-links{display:none;}
+  @media(min-width:720px){.nav-links{display:flex;}}
+
+  .hamburger{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:5px;
+    width:32px;height:32px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }  .hamburger span{
+    display:block;
+    height:2px;
+    width:100%;
+    background:var(--text);
+    transition:transform 0.25s ease, opacity 0.25s ease;
+  }
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media(min-width:720px){.hamburger{display:none;}}
+
+  .mobile-menu{
+    position:fixed;
+    top:65px; left:0; right:0;
+    background:var(--bg-alt);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    padding:8px 6vw 20px;
+    gap:2px;
+    transform:translateY(-8px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+    z-index:99;
+  }
+  .mobile-menu.open{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+  .mobile-menu a{
+    padding:14px 4px;
+    border-bottom:1px solid var(--line);
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-size:1rem;
+    color:var(--text);
+  }
+  .mobile-menu a:last-child{border-bottom:none;}
+  .mobile-menu a:active{color:var(--cyan);}
+  @media(min-width:720px){.mobile-menu{display:none;}}
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 6vw;
+    position:relative;
+  }
+  .hero-grid{
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(to right, rgba(0,240,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,240,255,0.04) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse at 30% 40%, black 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--magenta);
+    box-shadow:0 0 8px var(--magenta);
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.3;}
+  }
+  .boot-line{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--cyan);
+    font-size:0.8rem;
+    margin-bottom:24px;
+    min-height:1.2em;
+    border-left:2px solid var(--cyan);
+    padding-left:10px;
+  }
+  .cursor{
+    display:inline-block;
+    width:7px;height:14px;
+    background:var(--cyan);
+    margin-left:2px;
+    animation:blink 0.9s steps(1) infinite;
+    vertical-align:middle;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .hero h1{
+    font-size:clamp(3rem, 11vw, 7.5rem);
+    line-height:0.92;
+    font-weight:700;
+    position:relative;
+    z-index:1;
+  }
+  .hero h1 .glitch{
+    position:relative;
+    color:var(--text);
+    display:inline-block;
+  }
+  .hero h1 .glitch::before,
+  .hero h1 .glitch::after{
+    content:attr(data-text);
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    overflow:hidden;
+    clip-path:inset(0 0 0 0);
+  }
+  .hero h1 .glitch::before{
+    color:var(--cyan);
+    animation:glitchTop 4.5s infinite linear;
+  }
+  .hero h1 .glitch::after{
+    color:var(--magenta);
+    animation:glitchBot 4.5s infinite linear;
+  }
+  @keyframes glitchTop{
+    0%,88%,100%{clip-path:inset(0 0 100% 0); transform:translate(0,0);}
+    89%{clip-path:inset(0 0 60% 0); transform:translate(-3px,-1px);}
+    91%{clip-path:inset(40% 0 20% 0); transform:translate(3px,1px);}
+    93%{clip-path:inset(0 0 100% 0); transform:translate(0,0);}
+  }
+  @keyframes glitchBot{
+    0%,88%,100%{clip-path:inset(100% 0 0 0); transform:translate(0,0);}
+    89%{clip-path:inset(60% 0 0 0); transform:translate(3px,1px);}
+    91%{clip-path:inset(10% 0 50% 0); transform:translate(-3px,-1px);}
+    93%{clip-path:inset(100% 0 0 0); transform:translate(0,0);}
+  }
+  .hero-sub{
+    margin-top:28px;
+    max-width:520px;
+    color:var(--muted);
+    font-size:1.05rem;
+    line-height:1.6;
+    position:relative;
+    z-index:1;
+  }
+  .hero-cta{
+    margin-top:40px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    position:relative;
+    z-index:1;
+  }
+  .btn{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    padding:14px 28px;
+    font-size:0.95rem;
+    border-radius:2px;
+    transition:all 0.2s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-primary{
+    background:var(--cyan);
+    color:#04070B;
+    box-shadow:0 0 0 rgba(0,240,255,0);
+  }
+  .btn-primary:hover{
+    box-shadow:0 0 24px rgba(0,240,255,0.4);
+    transform:translateY(-2px);
+  }
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--text);
+  }
+  .btn-ghost:hover{
+    border-color:var(--magenta);
+    color:var(--magenta);
+  }
+
+  /* SECTION SHARED */
+  section{
+    padding:110px 6vw;
+    position:relative;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:56px;
+  }
+  .section-num{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--magenta);
+    font-size:0.85rem;
+  }
+  .section-title{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    font-weight:700;
+  }
+  .section-line{
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ABOUT */
+  .about-wrap{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+  @media(min-width:860px){.about-wrap{grid-template-columns:1.1fr 0.9fr;}}
+  .about-text p{
+    color:#B8C0CE;
+    font-size:1.1rem;
+    line-height:1.75;
+    margin-bottom:20px;
+  }
+  .stat-panel{
+    border:1px solid var(--line);
+    background:var(--bg-alt);
+    padding:28px;
+  }
+  .stat-panel-head{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .stat-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.9rem;
+  }
+  .stat-row:last-child{border-bottom:none;}
+  .stat-row span:first-child{color:var(--muted);}
+  .stat-row span:last-child{color:var(--cyan);}
+
+  /* PILLARS */
+  .pillars{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  @media(min-width:720px){.pillars{grid-template-columns:1fr 1fr;}}
+  .pillar{
+    background:var(--bg);
+    padding:44px 36px;
+    transition:background 0.25s ease;
+  }
+  .pillar:hover{background:var(--bg-alt);}
+  .pillar-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+  }
+  .pillar.gaming .pillar-tag{color:var(--magenta);}
+  .pillar.tech .pillar-tag{color:var(--cyan);}
+  .pillar h3{
+    font-size:2rem;
+    margin:14px 0 16px;
+  }
+  .pillar p{
+    color:var(--muted);
+    line-height:1.7;
+    font-size:0.98rem;
+  }
+  .pillar ul{
+    margin-top:18px;
+    list-style:none;
+  }
+  .pillar li{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.85rem;
+    color:#8890A0;
+    padding:6px 0;
+    padding-left:18px;
+    position:relative;
+  }
+  .pillar.gaming li::before{content:"▸"; position:absolute; left:0; color:var(--magenta);}
+  .pillar.tech li::before{content:"▸"; position:absolute; left:0; color:var(--cyan);}
+
+  /* VIDEOS */
+  .video-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+  @media(min-width:640px){.video-grid{grid-template-columns:1fr 1fr;}}
+  @media(min-width:980px){.video-grid{grid-template-columns:1fr 1fr 1fr;}}
+  .video-card{
+    border:1px solid var(--line);
+    background:var(--bg-alt);
+    overflow:hidden;
+    transition:transform 0.25s ease, border-color 0.25s ease;
+  }
+  .video-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--cyan);
+  }
+  .video-thumb{
+    aspect-ratio:16/9;
+    background:
+      linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,61,129,0.08)),
+      repeating-linear-gradient(45deg, #141926 0 12px, #10141D 12px 24px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .play-icon{
+    width:52px;height:52px;
+    border-radius:50%;
+    border:1px solid rgba(232,236,241,0.3);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);
+    font-size:0.9rem;
+    backdrop-filter:blur(4px);
+  }
+  .video-info{padding:18px 20px;}
+  .video-info h4{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    font-size:1.1rem;
+    text-transform:none;
+    margin-bottom:6px;
+  }
+  .video-info span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    color:var(--muted);
+  }
+
+  /* CTA FOOTER */
+  .cta-section{
+    text-align:center;
+    padding:130px 6vw;
+    border-top:1px solid var(--line);
+  }
+  .cta-section h2{
+    font-size:clamp(2.2rem,6vw,4rem);
+    max-width:800px;
+    margin:0 auto 24px;
+    line-height:1.05;
+  }
+  .cta-section p{
+    color:var(--muted);
+    max-width:480px;
+    margin:0 auto 40px;
+  }
+  footer{
+    padding:36px 6vw;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.8rem;
+    color:var(--muted);
+  }
+  .socials{display:flex; gap:22px;}
+  .socials a{display:flex; align-items:center; gap:8px;}
+  .socials a:hover{color:var(--cyan);}
+  .socials svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.6;}
+
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in{
+    opacity:1;
+    transform:translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo">GAMERZ<span>9211</span> <span class="pro-badge">PRO</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#pillars">Content</a>
+    <a href="#videos">Videos</a>
+    <a href="https://youtube.com/@Gamerz9211" target="_blank">Subscribe</a>
+  </div>
+  <a href="https://youtube.com/@Gamerz9211" target="_blank" class="btn btn-primary" style="padding:10px 20px; font-size:0.8rem;">Subscribe</a>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#pillars">Content</a>
+  <a href="#videos">Videos</a>
+  <a href="https://youtube.com/@Gamerz9211" target="_blank">Subscribe</a>
+</div>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="eyebrow"><span class="dot"></span> LIVE ON YOUTUBE · GAMING × TECH</div>
+  <div class="boot-line mono" id="bootLine"></div>
+  <h1><span class="glitch" data-text="GAMERZ9211">GAMERZ9211</span></h1>
+  <p class="hero-sub">Where high-stakes gameplay meets hands-on tech breakdowns — from bugs to boss fights, benchmarks to battle royales, it's all on one channel.</p>
+  <div class="hero-cta">
+    <a href="https://youtube.com/@Gamerz9211" target="_blank" class="btn btn-primary">▶ Subscribe Now</a>
+    <a href="https://youtube.com/@Gamerz9211/videos" target="_blank" class="btn btn-ghost">Watch Latest Videos</a>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-head">
+    <span class="section-num mono">01</span>
+    <h2 class="section-title">Channel Log</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-wrap reveal">
+    <div class="about-text">
+      <p>Gamerz9211 is a gaming-meets-tech channel — intense gameplay sessions paired with detailed commentary, alongside the latest gadgets, setups and tricks from the tech world.</p>
+      <p>If competitive gaming, honest tech reviews, or a community of fellow gamers and tech-heads sound like your thing — this channel is for you.</p>
+    </div>
+    <div class="stat-panel">
+      <div class="stat-panel-head">
+        <span>CHANNEL_STATUS</span>
+        <span>root@gamerz9211</span>
+      </div>
+      <div class="stat-row"><span>focus</span><span>gaming / tech</span></div>
+      <div class="stat-row"><span>uploads</span><span>weekly</span></div>
+      <div class="stat-row"><span>status</span><span>active ●</span></div>
+      <div class="stat-row"><span>vibe</span><span>high-energy</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pillars">
+  <div class="section-head">
+    <span class="section-num mono">02</span>
+    <h2 class="section-title">What You Get</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="pillars reveal">
+    <div class="pillar gaming">
+      <span class="pillar-tag">// GAMING</span>
+      <h3>Gameplay & Reviews</h3>
+      <p>Deep dives into trending and competitive titles, live reactions, and strategy breakdowns.</p>
+      <ul>
+        <li>Ranked / competitive matches</li>
+        <li>New game first-look reviews</li>
+        <li>Tips, tricks & pro strategies</li>
+      </ul>
+    </div>
+    <div class="pillar tech">
+      <span class="pillar-tag">// TECH</span>
+      <h3>Gadgets & Setups</h3>
+      <p>From gaming gear to everyday tech — honest reviews and practical breakdowns.</p>
+      <ul>
+        <li>Unboxings & gear reviews</li>
+        <li>PC / setup build guides</li>
+        <li>Tech news, simplified</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="videos">
+  <div class="section-head">
+    <span class="section-num mono">03</span>
+    <h2 class="section-title">Latest Uploads</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="video-grid reveal">
+    <div class="video-card">
+      <div class="video-thumb"><div class="play-icon">▶</div></div>
+      <div class="video-info">
+        <h4>Video Title Goes Here</h4>
+        <span>GAMING · Coming Soon</span>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-thumb"><div class="play-icon">▶</div></div>
+      <div class="video-info">
+        <h4>Video Title Goes Here</h4>
+        <span>TECH · Coming Soon</span>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-thumb"><div class="play-icon">▶</div></div>
+      <div class="video-info">
+        <h4>Video Title Goes Here</h4>
+        <span>GAMING · Coming Soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="subscribe" class="cta-section">
+  <h2 class="reveal">Join in one click.</h2>
+  <p class="reveal">New gaming and tech content every week — don't miss out.</p>
+  <a href="https://youtube.com/@Gamerz9211" target="_blank" class="btn btn-primary reveal">▶ Subscribe on YouTube</a>
+</section>
+
+<footer>
+  <span>© 2026 GAMERZ9211</span>
+  <div class="socials">
+    <a href="https://youtube.com/@Gamerz9211" target="_blank"><svg viewBox="0 0 24 24"><path d="M22 8.5s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C16.3 5 12 5 12 5h0s-4.3 0-7.1.2c-.4.1-1.3.1-2.1 1C2.2 6.9 2 8.5 2 8.5S1.8 10.3 1.8 12.2v1.7C1.8 15.7 2 17.5 2 17.5s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1C7 21 12 21 12 21s4.3 0 7.1-.2c.4-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.2-1.8.2-3.6v-1.7c0-1.9-.2-3.7-.2-3.7z"/><path d="M10 9.8l5.5 3-5.5 3z" fill="currentColor" stroke="none"/></svg> YouTube</a>
+    <a href="#" target="_blank"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"/></svg> Instagram</a>
+    <a href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M8 12a1.2 1.2 0 102.4 0A1.2 1.2 0 008 12zM13.6 12a1.2 1.2 0 102.4 0 1.2 1.2 0 00-2.4 0z"/><path d="M17.5 6.5A15 15 0 0014 5.3l-.3.7a12 12 0 00-3.4 0L10 5.3a15 15 0 00-3.5 1.2C4.3 9.7 3.8 12.8 4 15.9a15 15 0 004.5 2.3l.7-1.2a9 9 0 01-1.4-.7l.3-.3a10.5 10.5 0 007.8 0l.3.3a9 9 0 01-1.4.7l.7 1.2a15 15 0 004.5-2.3c.3-3.6-.5-6.6-2.5-9.4z"/></svg> Discord</a>
+  </div>
+</footer>
+
+<script>
+  // boot line typing effect
+  const bootText = "> initializing channel_feed... connected.";
+  const el = document.getElementById('bootLine');
+  let i = 0;
+  function typeBoot(){
+    if(i <= bootText.length){
+      el.textContent = bootText.slice(0, i);
+      i++;
+      setTimeout(typeBoot, 28);
+    } else {
+      el.innerHTML = bootText + '<span class="cursor"></span>';
+    }
+  }
+  typeBoot();
+
+  // hamburger menu toggle
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', isOpen);
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+  });
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+      }
+    });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
